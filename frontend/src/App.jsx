@@ -12,6 +12,8 @@ export default function App() {
   const [analysis, setAnalysis] = useState({});
   const [formData, setFormData] = useState({ title: '', amount: '', category: 'Food' });
 
+  const BACKEND_URL = 'https://onrender.com';
+
   const handleAuthSuccess = (data) => {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
@@ -32,7 +34,7 @@ export default function App() {
   const fetchLedger = async () => {
     if (!token) return;
     try {
-      const res = await fetch('https://cloud-budget-tracker-api.onrender.com/api/transactions', {
+      const res = await fetch(`${BACKEND_URL}/api/transactions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -49,13 +51,12 @@ export default function App() {
 
   useEffect(() => { fetchLedger(); }, [token]);
 
-   const handleAuthSubmit = async (e) => {
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
     setAuthError('');
     const endpoint = isRegistering ? 'register' : 'login';
     try {
-      // Clean, single endpoint route mapping for login/registration
-      const res = await fetch(`https://onrender.com{endpoint}`, {
+      const res = await fetch(`${BACKEND_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(authFormData)
@@ -70,22 +71,17 @@ export default function App() {
       setAuthError('Cannot reach authentication server.');
     }
   };
-  
-    const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let finalAmount = Number(formData.amount);
       if (formData.category !== 'Income' && finalAmount > 0) {
         finalAmount = -finalAmount;
       }
-
-      // Ensure this line points directly to your live production server API path
-      await fetch('https://cloud-budget-tracker-api.onrender.com/api/transactions', {
+      await fetch(`${BACKEND_URL}/api/transactions`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ ...formData, amount: finalAmount })
       });
       setFormData({ title: '', amount: '', category: 'Food' });
@@ -97,7 +93,7 @@ export default function App() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/transactions/${id}`, {
+      await fetch(`${BACKEND_URL}/api/transactions/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -152,12 +148,12 @@ export default function App() {
       </div>
     );
   }
-  return (
+    return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
       <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1>📊 Cloud Financial Control</h1>
-          <p style={{ color: '#94a3b8', margin: 0 }}>Welcome back, <strong style={{ color: '#3b82f6' }}>{user?.name}</strong>. Real-time predictive architecture engine</p>
+          <p style={{ color: '#94a3b8', margin: 0 }}>Welcome back, <strong style={{ color: '#3b82f6' }}>{user?.name}</strong>. Real-time predictive infrastructure engine</p>
         </div>
         <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}>
           <LogOut size={16} /> Log Out
@@ -234,3 +230,4 @@ export default function App() {
     </div>
   );
 }
+
