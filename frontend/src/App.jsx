@@ -103,6 +103,36 @@ const BACKEND_URL = 'https://cloud-budget-tracker-api.onrender.com';
       console.error("Failed to delete item:", err);
     }
   };
+  // Native CSV/Excel Data Exporter Engine
+  const exportToCSV = () => {
+    if (transactions.length === 0) return alert("Your tracking ledger is empty. Log transactions before exporting sheets.");
+    
+    // Define your clean spreadsheet data header columns
+    const headers = ["Transaction ID", "Description", "Amount (PHP)", "Category", "Timestamp"];
+    
+    // Clean and map your database records into rows
+    const rows = transactions.map(tx => [
+      tx._id,
+      `"${tx.title.replace(/"/g, '""')}"`, // Sanitizes descriptions containing commas
+      tx.amount,
+      tx.category,
+      new Date(tx.createdAt).toLocaleString()
+    ]);
+    
+    // Combine headers and rows together using standard comma separation strings
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    
+    // Generate an automatic native invisible browser download link element
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${user?.name || 'Gelo'}_Financial_Ledger_Report.csv`);
+    document.body.appendChild(link);
+    
+    link.click(); // Automates the click event to pull the file down to your disk
+    document.body.removeChild(link);
+  };
 
   const chartData = Object.entries(
     transactions.reduce((acc, tx) => {
@@ -151,14 +181,20 @@ const BACKEND_URL = 'https://cloud-budget-tracker-api.onrender.com';
   }
     return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
-      <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1>📊 Cloud Financial Control</h1>
-          <p style={{ color: '#94a3b8', margin: 0 }}>Welcome back, <strong style={{ color: '#3b82f6' }}>{user?.name}</strong>. Real-time predictive infrastructure engine</p>
+          <p style={{ color: '#94a3b8', margin: 0 }}>Welcome back, <strong style={{ color: '#3b82f6' }}>{user?.name}</strong>. Real-time predictive architecture engine</p>
         </div>
-        <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}>
-          <LogOut size={16} /> Log Out
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          {/* Fresh Spreadsheet Exporter Trigger Button Button */}
+          <button onClick={exportToCSV} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', color: '#4ade80', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}>
+            📥 Export to Excel
+          </button>
+          <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}>
+            <LogOut size={16} /> Log Out
+          </button>
+        </div>
       </header>
 
       {analysis.alertMessage && (
