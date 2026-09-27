@@ -71,16 +71,21 @@ export default function App() {
     }
   };
   
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let finalAmount = Number(formData.amount);
       if (formData.category !== 'Income' && finalAmount > 0) {
         finalAmount = -finalAmount;
       }
-      await fetch('http://localhost:5000/api/transactions', {
+
+      // Ensure this line points directly to your live production server API path
+      await fetch('https://cloud-budget-tracker-api.onrender.com/api/transactions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ ...formData, amount: finalAmount })
       });
       setFormData({ title: '', amount: '', category: 'Food' });
