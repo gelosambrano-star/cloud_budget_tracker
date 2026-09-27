@@ -1,30 +1,28 @@
-const mongoose = require ('mongoose');
-const { createRadialChart } = require('recharts');
-const  userSchema= new mongoose.Schema({
- name: {
+const mongoose = require('mongoose');
+
+const UserSchema = new mongoose.Schema({
+  name: {
     type: String,
     required: [true, 'Please add a name']
-
- },
- email:{
+  },
+  email: {
     type: String,
-    required: [true,'Please add a email'],
-    unique: true, //prevents duplicate registrations
+    required: [true, 'Please add an email'],
+    unique: true,
     match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       'Please add a valid email'
     ]
- },
- password:{
+  },
+  password: {
     type: String,
     required: [true, 'Please add a password'],
     minlength: 6
- },
- createdAt: {
+  },
+  createdAt: {
     type: Date,
     default: Date.now
- }
-
+  }
 });
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', UserSchema);
