@@ -224,34 +224,39 @@ const BACKEND_URL = 'https://cloud-budget-tracker-api.onrender.com';
           </select>
          <button type="submit" style={{ padding: '12px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Post to Ledger</button>
        
-                  {/* 📊 Premium Analytics Excel/CSV Exporter Trigger Utility */}
-          <button 
-            type="button" 
-            onClick={() => {
-              if (transactions.length === 0) return alert('No ledger entries available for data synthesis.');
-              const headers = ['Transaction ID', 'Description', 'Amount (PHP)', 'Category', 'Timestamp'];
-              const rows = transactions.map(tx => [
-                tx._id,
-                `"${tx.title}"`,
-                tx.amount,
-                tx.category,
-                new Date(tx.createdAt).toLocaleString()
-              ]);
-              const csvContent = "data:text/csv;charset=utf-8," 
-                + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-              const encodedUri = encodeURI(csvContent);
-              const link = document.createElement("a");
-              link.setAttribute("href", encodedUri);
-              link.setAttribute("download", `Ledger_Report_${new Date().toLocaleDateString()}.csv`);
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }} 
-            style={{ padding: '12px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', color: '#4ade80', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', marginTop: '8px', transition: 'all 0.2s' }}
-          >
-            📊 Export to Excel Spreadsheet
-          </button>
+                 {/* 📊 Data Exporter Analytics Row */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            <button 
+              type="button" 
+              onClick={() => {
+                if (transactions.length === 0) return alert('No ledger entries available for data synthesis.');
+                const headers = ['Transaction ID', 'Description', 'Amount (PHP)', 'Category', 'Timestamp'];
+                const rows = transactions.map(tx => [tx._id, `"${tx.title}"`, tx.amount, tx.category, new Date(tx.createdAt).toLocaleString()]);
+                const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `Ledger_Report_${new Date().toLocaleDateString()}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }} 
+              style={{ padding: '10px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', color: '#4ade80', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+            >
+              📊 Export to Excel Spreadsheet
+            </button>
 
+            <button 
+              type="button" 
+              onClick={() => {
+                if (transactions.length === 0) return alert('No active transaction ledger logs to render into document format.');
+                window.print(); // Triggers the dynamic visual browser document print engine layout natively!
+              }} 
+              style={{ padding: '10px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', color: '#60a5fa', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+            >
+              📄 Print / Save as PDF Statement
+            </button>
+          </div>
         </form>
 
         <div className="glass-card" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column' }}>
