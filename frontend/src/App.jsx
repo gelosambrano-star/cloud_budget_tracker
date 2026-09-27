@@ -12,7 +12,8 @@ export default function App() {
   const [analysis, setAnalysis] = useState({});
   const [formData, setFormData] = useState({ title: '', amount: '', category: 'Food' });
 
-  const BACKEND_URL = 'https://onrender.com';
+const BACKEND_URL = 'https://cloud-budget-tracker-api.onrender.com';
+
 
   const handleAuthSuccess = (data) => {
     localStorage.setItem('token', data.token);
