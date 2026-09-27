@@ -49,13 +49,13 @@ export default function App() {
 
   useEffect(() => { fetchLedger(); }, [token]);
 
-  const handleAuthSubmit = async (e) => {
+   const handleAuthSubmit = async (e) => {
     e.preventDefault();
     setAuthError('');
     const endpoint = isRegistering ? 'register' : 'login';
     try {
-      const res = await fetch(`const res = await fetch(`https://cloud-budget-tracker-api.onrender.com/api/transactions', {`, {
-${endpoint}`, {
+      // Clean, single endpoint route mapping for login/registration
+      const res = await fetch(`https://onrender.com{endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(authFormData)
@@ -70,7 +70,7 @@ ${endpoint}`, {
       setAuthError('Cannot reach authentication server.');
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
