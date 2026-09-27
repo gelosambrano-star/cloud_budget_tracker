@@ -32,7 +32,7 @@ export default function App() {
   const fetchLedger = async () => {
     if (!token) return;
     try {
-      const res = await fetch('http://localhost:5000/api/transactions', {
+      const res = await fetch('https://cloud-budget-tracker-api.onrender.com/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -54,7 +54,8 @@ export default function App() {
     setAuthError('');
     const endpoint = isRegistering ? 'register' : 'login';
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+      const res = await fetch(`const res = await fetch(`https://cloud-budget-tracker-api.onrender.com/api/transactions', {`, {
+${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(authFormData)
