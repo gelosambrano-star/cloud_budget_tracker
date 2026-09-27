@@ -222,7 +222,36 @@ const BACKEND_URL = 'https://cloud-budget-tracker-api.onrender.com';
             <option value="Utilities">Utilities</option>
             <option value="Entertainment">Entertainment</option>
           </select>
-          <button type="submit" style={{ padding: '12px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Post to Ledger</button>
+         <button type="submit" style={{ padding: '12px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Post to Ledger</button>
+       
+                  {/* 📊 Premium Analytics Excel/CSV Exporter Trigger Utility */}
+          <button 
+            type="button" 
+            onClick={() => {
+              if (transactions.length === 0) return alert('No ledger entries available for data synthesis.');
+              const headers = ['Transaction ID', 'Description', 'Amount (PHP)', 'Category', 'Timestamp'];
+              const rows = transactions.map(tx => [
+                tx._id,
+                `"${tx.title}"`,
+                tx.amount,
+                tx.category,
+                new Date(tx.createdAt).toLocaleString()
+              ]);
+              const csvContent = "data:text/csv;charset=utf-8," 
+                + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+              const encodedUri = encodeURI(csvContent);
+              const link = document.createElement("a");
+              link.setAttribute("href", encodedUri);
+              link.setAttribute("download", `Ledger_Report_${new Date().toLocaleDateString()}.csv`);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }} 
+            style={{ padding: '12px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', color: '#4ade80', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', marginTop: '8px', transition: 'all 0.2s' }}
+          >
+            📊 Export to Excel Spreadsheet
+          </button>
+
         </form>
 
         <div className="glass-card" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column' }}>
